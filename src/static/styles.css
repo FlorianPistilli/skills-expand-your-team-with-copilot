@@ -30,6 +30,10 @@
   --error-light: #ffebee;
   --info: #0c5460;
   --info-light: #d1ecf1;
+
+  /* Additional colors for difficulty badges */
+  --orange: #e65100;
+  --orange-light: #fff3e0;
 }
 
 * {
@@ -218,18 +222,18 @@ section h3 {
 }
 
 .difficulty-badge.beginner {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--success-light);
+  color: var(--success);
 }
 
 .difficulty-badge.intermediate {
-  background: #fff3e0;
-  color: #e65100;
+  background: var(--orange-light);
+  color: var(--orange);
 }
 
 .difficulty-badge.advanced {
-  background: #ffebee;
-  color: #c62828;
+  background: var(--error-light);
+  color: var(--error);
 }
 
 /* Capacity Indicator */
