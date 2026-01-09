@@ -8,6 +8,9 @@ from typing import Dict, Any, Optional, List
 
 from ..database import activities_collection, teachers_collection
 
+# Valid difficulty levels for filtering
+VALID_DIFFICULTIES = ['All', 'Beginner', 'Intermediate', 'Advanced']
+
 router = APIRouter(
     prefix="/activities",
     tags=["activities"]
@@ -45,8 +48,7 @@ def get_activities(
         query["schedule_details.end_time"] = {"$lte": end_time}
     
     # Validate and handle difficulty filter
-    valid_difficulties = ["All", "Beginner", "Intermediate", "Advanced"]
-    if difficulty and difficulty in valid_difficulties:
+    if difficulty and difficulty in VALID_DIFFICULTIES:
         if difficulty == "All":
             query["difficulty"] = {"$exists": False}
         else:

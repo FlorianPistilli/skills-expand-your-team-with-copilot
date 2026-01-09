@@ -46,6 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Authentication state
   let currentUser = null;
 
+  // CSS class mapping for difficulty badges (prevents injection)
+  const difficultyClassMap = {
+    "Beginner": "beginner",
+    "Intermediate": "intermediate",
+    "Advanced": "advanced"
+  };
+
   // Time range mappings for the dropdown
   const timeRanges = {
     morning: { start: "06:00", end: "08:00" }, // Before school hours
@@ -540,13 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Create difficulty badge (only if difficulty is specified)
-    // Validate difficulty to prevent injection attacks - use mapping for CSS classes
-    const difficultyClassMap = {
-      "Beginner": "beginner",
-      "Intermediate": "intermediate",
-      "Advanced": "advanced"
-    };
-    
+    // Use mapping to ensure only valid CSS classes are applied
     const difficultyBadge = details.difficulty && difficultyClassMap[details.difficulty]
       ? `<div class="difficulty-badge ${difficultyClassMap[details.difficulty]}">${escapeHtml(details.difficulty)}</div>`
       : "";
