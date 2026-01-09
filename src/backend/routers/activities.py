@@ -8,6 +8,9 @@ from typing import Dict, Any, Optional, List
 
 from ..database import activities_collection, teachers_collection
 
+# Valid difficulty levels for filtering
+VALID_DIFFICULTIES = ['All', 'Beginner', 'Intermediate', 'Advanced']
+
 router = APIRouter(
     prefix="/activities",
     tags=["activities"]
@@ -18,7 +21,8 @@ router = APIRouter(
 def get_activities(
     day: Optional[str] = None,
     start_time: Optional[str] = None,
-    end_time: Optional[str] = None
+    end_time: Optional[str] = None,
+    difficulty: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Get all activities with their details, with optional filtering by day and time
@@ -26,6 +30,10 @@ def get_activities(
     - day: Filter activities occurring on this day (e.g., 'Monday', 'Tuesday')
     - start_time: Filter activities starting at or after this time (24-hour format, e.g., '14:30')
     - end_time: Filter activities ending at or before this time (24-hour format, e.g., '17:00')
+    - difficulty: Filter activities by difficulty level. Special values:
+        - Empty string or None: Show all activities regardless of difficulty (no filter)
+        - "All": Show only activities without a difficulty field (suitable for all levels)
+        - "Beginner", "Intermediate", "Advanced": Show only activities with that difficulty
     """
     # Build the query based on provided filters
     query = {}
@@ -38,6 +46,13 @@ def get_activities(
     
     if end_time:
         query["schedule_details.end_time"] = {"$lte": end_time}
+    
+    # Validate and handle difficulty filter
+    if difficulty and difficulty in VALID_DIFFICULTIES:
+        if difficulty == "All":
+            query["difficulty"] = {"$exists": False}
+        else:
+            query["difficulty"] = difficulty
     
     # Query the database
     activities = {}
