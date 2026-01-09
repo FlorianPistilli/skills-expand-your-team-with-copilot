@@ -511,14 +511,34 @@ document.addEventListener("DOMContentLoaded", () => {
         shareLink = `mailto:?subject=${encodedTitle}&body=${encodedText}%0A%0A${encodedUrl}`;
         break;
       case 'copy':
-        // Copy to clipboard
+        // Copy to clipboard with fallback for older browsers
         const textToCopy = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          showMessage('Link copied to clipboard!', 'success');
-        }).catch((err) => {
-          console.error('Failed to copy:', err);
-          showMessage('Failed to copy link', 'error');
-        });
+        
+        // Try modern clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            showMessage('Link copied to clipboard!', 'success');
+          }).catch((err) => {
+            console.error('Failed to copy:', err);
+            showMessage('Failed to copy link', 'error');
+          });
+        } else {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = textToCopy;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            showMessage('Link copied to clipboard!', 'success');
+          } catch (err) {
+            console.error('Failed to copy:', err);
+            showMessage('Failed to copy link', 'error');
+          }
+          document.body.removeChild(textArea);
+        }
         return;
     }
     
@@ -654,7 +674,6 @@ document.addEventListener("DOMContentLoaded", () => {
     shareButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
         e.preventDefault();
-        const activityName = button.dataset.activity;
         const platform = button.dataset.platform;
         handleShare(platform, name, details);
       });
