@@ -540,10 +540,15 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Create difficulty badge (only if difficulty is specified)
-    // Validate difficulty to prevent injection attacks
-    const validDifficulties = ["Beginner", "Intermediate", "Advanced"];
-    const difficultyBadge = details.difficulty && validDifficulties.includes(details.difficulty)
-      ? `<div class="difficulty-badge ${escapeHtml(details.difficulty.toLowerCase())}">${escapeHtml(details.difficulty)}</div>`
+    // Validate difficulty to prevent injection attacks - use mapping for CSS classes
+    const difficultyClassMap = {
+      "Beginner": "beginner",
+      "Intermediate": "intermediate",
+      "Advanced": "advanced"
+    };
+    
+    const difficultyBadge = details.difficulty && difficultyClassMap[details.difficulty]
+      ? `<div class="difficulty-badge ${difficultyClassMap[details.difficulty]}">${escapeHtml(details.difficulty)}</div>`
       : "";
 
     activityCard.innerHTML = `
