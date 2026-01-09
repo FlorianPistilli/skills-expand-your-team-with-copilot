@@ -540,7 +540,9 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Create difficulty badge (only if difficulty is specified)
-    const difficultyBadge = details.difficulty
+    // Validate difficulty to prevent injection attacks
+    const validDifficulties = ["Beginner", "Intermediate", "Advanced"];
+    const difficultyBadge = details.difficulty && validDifficulties.includes(details.difficulty)
       ? `<div class="difficulty-badge ${escapeHtml(details.difficulty.toLowerCase())}">${escapeHtml(details.difficulty)}</div>`
       : "";
 
