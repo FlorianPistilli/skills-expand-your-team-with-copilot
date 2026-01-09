@@ -53,6 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
     weekend: { days: ["Saturday", "Sunday"] }, // Weekend days
   };
 
+  // Helper function to escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Initialize filters from active elements
   function initializeFilters() {
     // Initialize day filter
@@ -534,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create difficulty badge (only if difficulty is specified)
     const difficultyBadge = details.difficulty
-      ? `<div class="difficulty-badge ${details.difficulty.toLowerCase()}">${details.difficulty}</div>`
+      ? `<div class="difficulty-badge ${escapeHtml(details.difficulty.toLowerCase())}">${escapeHtml(details.difficulty)}</div>`
       : "";
 
     activityCard.innerHTML = `
